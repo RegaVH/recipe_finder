@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -9,7 +9,8 @@ export const SearchBar = ({ setRecipes }) => {
   const [query, setQuery] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchRecipes = async () => {
+  const fetchRecipes = useCallback(async () => {
+    if (searchTerm === '') return;
     try {
       const response = await fetch(
         `https://api.edamam.com/search?q=${searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}`
@@ -22,7 +23,11 @@ export const SearchBar = ({ setRecipes }) => {
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
-  };
+  }, [searchTerm, setRecipes]);
+
+  useEffect(() => {
+    fetchRecipes();
+  }, [fetchRecipes]);
 
   const handleChange = (event) => {
     setQuery(event.target.value);
@@ -30,7 +35,6 @@ export const SearchBar = ({ setRecipes }) => {
 
   const handleSearch = () => {
     setSearchTerm(query);
-    fetchRecipes();
   };
 
   const handleKeyPress = (event) => {
