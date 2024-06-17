@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const APP_ID = '87f82b5b';
-const APP_KEY = '6f9614e43ff73f8480f856bdba5f3fa7';
+const APP_ID = 'YOUR_APP_ID';
+const APP_KEY = 'YOUR_APP_KEY';
 
 export const SearchBar = ({ setRecipes }) => {
   const [query, setQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchRecipes = useCallback(async () => {
+  const fetchRecipes = async () => {
     try {
       const response = await fetch(
-        `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`
+        `https://api.edamam.com/search?q=${searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}`
       );
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -21,16 +22,21 @@ export const SearchBar = ({ setRecipes }) => {
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
-  }, [query, setRecipes]);
-
-  useEffect(() => {
-    if (query !== '') {
-      fetchRecipes();
-    }
-  }, [query, fetchRecipes]);
+  };
 
   const handleChange = (event) => {
     setQuery(event.target.value);
+  };
+
+  const handleSearch = () => {
+    setSearchTerm(query);
+    fetchRecipes();
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -38,11 +44,12 @@ export const SearchBar = ({ setRecipes }) => {
       label="Search"
       value={query}
       onChange={handleChange}
+      onKeyPress={handleKeyPress}
       fullWidth
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={fetchRecipes}>
+            <IconButton onClick={handleSearch}>
               <SearchIcon />
             </IconButton>
           </InputAdornment>
