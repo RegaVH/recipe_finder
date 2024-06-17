@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const APP_ID = 'YOUR_APP_ID';
-const APP_KEY = 'YOUR_APP_KEY';
+const APP_ID = '87f82b5b';
+const APP_KEY = '6f9614e43ff73f8480f856bdba5f3fa7';
 
 export const SearchBar = ({ setRecipes }) => {
   const [query, setQuery] = useState('');
